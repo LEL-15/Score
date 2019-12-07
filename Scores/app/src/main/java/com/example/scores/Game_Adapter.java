@@ -1,6 +1,8 @@
 package com.example.scores;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,17 @@ public class Game_Adapter extends RecyclerView.Adapter<Game_Adapter.ViewHolder> 
         final Game thing = GameList.get(position);
 
         holder.title.setText(thing.getName());
+
+        holder.cv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                String print = "" + thing.getID();
+                Intent intent = new Intent(view.getContext(), editGameActivity.class);
+                intent.putExtra("ID", thing.getID());
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override

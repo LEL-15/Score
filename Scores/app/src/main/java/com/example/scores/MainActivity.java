@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d(TAG, "onComplete: One item");
                                 Game game = new Game();
                                 game.setName(document.getString("name"));
+                                game.setId(document.getId());
 
                                 Games.add(game);
                             }
@@ -82,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+
+        //Navigation Bar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
