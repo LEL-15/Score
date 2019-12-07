@@ -21,6 +21,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class editGameActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
@@ -61,7 +62,7 @@ public class editGameActivity extends AppCompatActivity {
                     }
                 });
 
-        db.collection("games").document(id).collection("players")
+        db.collection("games").document(id).collection("players").orderBy("score")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -89,6 +90,7 @@ public class editGameActivity extends AppCompatActivity {
                         //Set the adapter to add all the item cards to the recycler view
                         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
                         recyclerView.setLayoutManager(hold);
+                        Collections.reverse(Players);
                         adapter = new Player_Adapter(Players);
 
                         recyclerView.setAdapter(adapter);
