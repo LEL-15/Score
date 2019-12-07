@@ -3,6 +3,7 @@ package com.example.scores;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,7 +74,9 @@ public class editGameActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Player player = new Player();
                                 player.setName(document.getString("name"));
-                                player.setScore(document.getDouble("score"));
+                                player.setScore((int) Math.round(document.getDouble("score")));
+                                player.setGame_id(id);
+                                player.setId(document.getId());
 
                                 Players.add(player);
                             }

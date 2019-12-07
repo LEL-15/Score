@@ -5,10 +5,17 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -39,6 +46,34 @@ public class Player_Adapter extends RecyclerView.Adapter<Player_Adapter.ViewHold
 
         holder.title.setText(thing.getName());
         holder.score.setText(thing.getScore().toString());
+
+        holder.plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+                DocumentReference ref = rootRef.collection("games").document(thing.getGame_id()).collection("players").document(thing.getId());
+                ref.update("score",  FieldValue.increment(1));
+
+                Intent intent = new Intent(view.getContext(), editGameActivity.class);
+                intent.putExtra("ID", thing.getGame_id());
+                view.getContext().startActivity(intent);
+            }
+        });
+
+        holder.minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+                DocumentReference ref = rootRef.collection("games").document(thing.getGame_id()).collection("players").document(thing.getId());
+                ref.update("score",  FieldValue.increment(-1));
+
+                Intent intent = new Intent(view.getContext(), editGameActivity.class);
+                intent.putExtra("ID", thing.getGame_id());
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -46,18 +81,21 @@ public class Player_Adapter extends RecyclerView.Adapter<Player_Adapter.ViewHold
         return PlayerList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder
-    {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView score;
         CardView cv;
+        ImageButton plus;
+        ImageButton minus;
+
         //Create new itemView for each item in passed item list
-        public ViewHolder(View gameView)
-        {
+        public ViewHolder(View gameView) {
             super(gameView);
-            title = (TextView)gameView.findViewById(R.id.name);
-            score = (TextView)gameView.findViewById(R.id.score);
-            cv = (CardView)gameView.findViewById(R.id.cv);
+            title = (TextView) gameView.findViewById(R.id.name);
+            score = (TextView) gameView.findViewById(R.id.score);
+            cv = (CardView) gameView.findViewById(R.id.cv);
+            plus = (ImageButton) gameView.findViewById(R.id.plus);
+            minus = (ImageButton) gameView.findViewById(R.id.minus);
         }
     }
 }
