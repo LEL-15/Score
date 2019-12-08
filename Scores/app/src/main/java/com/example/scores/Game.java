@@ -1,9 +1,12 @@
 package com.example.scores;
 
+import java.util.ArrayList;
+
 //A class for each item; used to display in buy page
 public class Game {
     private String name;
     private String id;
+    ArrayList<String> Players = new ArrayList<String>();
 
     public Game() {
         //empty constructor needed
@@ -18,6 +21,7 @@ public class Game {
         return name;
     }
     public String getID(){return id;}
+    public ArrayList<String> getPlayers(){return Players;}
     //Set all things in item
     public void setName(String Name) {
         name = Name;
@@ -25,4 +29,5 @@ public class Game {
     public void setId(String Id) {
         id = Id;
     }
+    public void addPlayer(String player){Players.add(player);}
 }
