@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ public class editGameActivity extends AppCompatActivity {
     ArrayList<Player> Players = new ArrayList<Player>();
     RecyclerView recyclerView;
     Player_Adapter adapter;
+    String id;
 
 
     @Override
@@ -38,7 +40,7 @@ public class editGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent loadIntent = getIntent();
         //Find out what the item's id is
-        final String id = loadIntent.getStringExtra("ID");
+        id = loadIntent.getStringExtra("ID");
         setContentView(R.layout.edit_game);
         final RecyclerView.LayoutManager hold = new LinearLayoutManager(this);
 
@@ -78,10 +80,12 @@ public class editGameActivity extends AppCompatActivity {
                                 player.setScore((int) Math.round(document.getDouble("score")));
                                 player.setGame_id(id);
                                 player.setId(document.getId());
+                                player.setColor(document.getString("color"));
 
                                 Players.add(player);
                             }
                         }
+
                         //If failed to access firebase
                         else {
                             Log.d("Testing", "Problem");
@@ -97,5 +101,18 @@ public class editGameActivity extends AppCompatActivity {
                     }
                 });
         
+    }
+
+    //Functions for each button pushed
+    public void newPlayer(View item){
+        //Create intent
+        Intent intent = new Intent(this, AddPlayerActivity.class);
+        intent.putExtra("GAME", id);
+        startActivity(intent);
+    }
+    public void exitGame(View item){
+        //Create intent
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

@@ -17,6 +17,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Dictionary;
 import java.util.List;
 
 //Adapter to create card for items and add them to recyclerView in buy page
@@ -46,6 +47,11 @@ public class Player_Adapter extends RecyclerView.Adapter<Player_Adapter.ViewHold
 
         holder.title.setText(thing.getName());
         holder.score.setText(thing.getScore().toString());
+        String color_want = thing.getColor();
+
+        int int_color = context.getResources().getIdentifier(color_want, "color", context.getPackageName());
+        holder.cv.setCardBackgroundColor(context.getResources().getColor(int_color));
+
 
         holder.plus.setOnClickListener(new View.OnClickListener() {
             @Override

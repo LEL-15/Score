@@ -16,4 +16,15 @@
     <string name="menu_send">Send</string>
 
     <string name="action_replay">Replay</string>
+
+    <string-array name="color_array">
+        <item>Select One</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Purple</item>
+        <item>Pink</item>
+        <item>Red</item>
+    </string-array>
 </resources>
