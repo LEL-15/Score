@@ -68,35 +68,24 @@ public class MainActivity extends AppCompatActivity {
                             //Add item card to item list
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, "onComplete: One item");
-                                final Game game = new Game();
+                                Game game = new Game();
                                 game.setName(document.getString("name"));
                                 game.setId(document.getId());
-                                db.collection("games").document(document.getId()).collection("players")
-                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        //If succesfully accessed firebase
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot sub_document : task.getResult()) {
-                                                game.addPlayer(sub_document.getString("name"));
-                                            }
-                                            Games.add(game);
-                                            Log.d(TAG, "onComplete: Game added");
-                                        }
-                                        //Set the adapter to add all the item cards to the recycler view
-                                        Log.d(TAG, "onComplete: set adapter");
-                                        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-                                        recyclerView.setLayoutManager(hold);
-                                        adapter = new Game_Adapter(Games);
-                                        recyclerView.setAdapter(adapter);
-                                    }
-                                });
+
+                                Games.add(game);
                             }
                         }
                         //If failed to access firebase
                         else {
                             Log.d("Testing", "Problem");
                         }
+
+                        //Set the adapter to add all the item cards to the recycler view
+                        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+                        recyclerView.setLayoutManager(hold);
+                        adapter = new Game_Adapter(Games);
+
+                        recyclerView.setAdapter(adapter);
                     }
                 });
 

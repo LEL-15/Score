@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -45,18 +44,32 @@ public class NewGameActivity extends AppCompatActivity {
 
         Map<String, Object> data = new HashMap<>();
         data.put("name", game_name);
-        final Context hold = this;
 
-        ref.add(data).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentReference> task) {
-                id = task.getResult().getId();
-                Log.d(TAG, "onComplete: " + id);
-                //Create intent
-                Intent intent = new Intent(hold, AddPlayerActivity.class);
-                intent.putExtra("GAME", id);
-                startActivity(intent);
-            }
-        });
+        ref.add(data);
+        final Context hold = this;
+        db.collection("games")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        //If succesfully accessed firebase
+                        if (task.isSuccessful()) {
+                            //For every item in the database
+                            //Create an item card, set its name and price
+                            //Add item card to item list
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, "onComplete: current name is " + document.getString("name"));
+                                Log.d(TAG, "onComplete: Looking for: " + game_name);
+                                if(document.getString("name").equals(game_name)){
+                                    id = document.getId();
+                                }
+                            }
+                        }
+                        //Create intent
+                        Intent intent = new Intent(hold, AddPlayerActivity.class);
+                        intent.putExtra("GAME", id);
+                        startActivity(intent);
+                    }
+                });
     }
 }
