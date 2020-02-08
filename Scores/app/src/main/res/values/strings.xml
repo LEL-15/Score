@@ -15,6 +15,8 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
 
+    <string name="signed_out">Signed Out</string>
+
     <string name="action_replay">Replay</string>
 
     <string-array name="color_array">
