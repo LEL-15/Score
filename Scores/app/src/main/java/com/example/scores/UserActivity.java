@@ -3,6 +3,7 @@ package com.example.scores;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,22 +12,25 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class UserActivity extends AppCompatActivity {
-    private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
-    private GoogleSignInClient mGoogleSignInClient;
+import java.util.HashMap;
+import java.util.Map;
 
+public class UserActivity extends AppCompatActivity {
+    private FirebaseAuth mAuth;
+    FirebaseFirestore db;
+    private GoogleSignInClient mGoogleSignInClient;
+    final FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();;
+    DocumentReference userRef = rootRef.collection("users").document(user.getUid());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +40,24 @@ public class UserActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        String id = currentUser.getUid();
+
+        final String id = user.getUid();
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String name = documentSnapshot.getString("name");
+                String color = documentSnapshot.getString("color");
+
+                TextView colorText = findViewById(R.id.color);
+                colorText.setText(color);
+
+                TextView nameText = findViewById(R.id.name);
+                nameText.setText(name);
+
+                TextView idText = findViewById(R.id.uid);
+                idText.setText(id);
+            }
+        });
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))

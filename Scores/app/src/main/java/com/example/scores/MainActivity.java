@@ -16,6 +16,7 @@
 
 package com.example.scores;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -38,6 +40,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 /**
  * Demonstrate Firebase Authentication using a Google ID Token.
@@ -51,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
     // [END declare_auth]
 
     private GoogleSignInClient mGoogleSignInClient;
-    private TextView mStatusTextView;
-    private TextView mDetailTextView;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,24 +123,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-<<<<<<< Updated upstream
-                            Log.d(TAG, "onComplete: Here");
-                            //For every item in the database
-                            //Create an item card, set its name and price
-                            //Add item card to item list
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, "onComplete: One item");
-                                Game game = new Game();
-                                game.setName(document.getString("name"));
-                                game.setId(document.getId());
-
-                                Games.add(game);
-                            }
-                        }
-                        //If failed to access firebase
-                        else {
-                            Log.d("Testing", "Problem");
-=======
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
@@ -145,15 +132,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             updateUI(null);
->>>>>>> Stashed changes
                         }
-
-                        //Set the adapter to add all the item cards to the recycler view
-                        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-                        recyclerView.setLayoutManager(hold);
-                        adapter = new Game_Adapter(Games);
-
-                        recyclerView.setAdapter(adapter);
                     }
                 });
     }
@@ -180,10 +159,40 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(final FirebaseUser user) {
+        final Context hold = this;
         if (user != null) {
-            Intent intent = new Intent(this, DisplayGameActivity.class);
-            startActivity(intent);
+            db.collection("users")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            Boolean exists = false;
+                            //If succesfully accessed firebase
+                            if (task.isSuccessful()) {
+                                //For every item in the database
+                                //Create an item card, set its name and price
+                                //Add item card to item list
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String id = document.getString("uid");
+                                    if(id.equals(user.getUid())){
+                                        exists = true;
+                                        Intent intent = new Intent(hold, DisplayGamesActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }
+                                if(!exists){
+                                    Intent intent = new Intent(hold, NewUserActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                            //If failed to access firebase
+                            else {
+                                Log.d("Testing", "Problem");
+                            }
+
+                        }
+                    });
         } else {
             findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
         }
@@ -201,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         else if(i == R.id.nav_home){
-            Intent intent = new Intent(this, DisplayGameActivity.class);
+            Intent intent = new Intent(this, DisplayGamesActivity.class);
             startActivity(intent);
         }
     }

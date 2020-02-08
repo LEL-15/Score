@@ -74,10 +74,6 @@ public class Player_Adapter extends RecyclerView.Adapter<Player_Adapter.ViewHold
                 FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
                 DocumentReference ref = rootRef.collection("games").document(thing.getGame_id()).collection("players").document(thing.getId());
                 ref.update("score",  FieldValue.increment(-1));
-
-                Intent intent = new Intent(view.getContext(), editGameActivity.class);
-                intent.putExtra("ID", thing.getGame_id());
-                view.getContext().startActivity(intent);
             }
         });
     }

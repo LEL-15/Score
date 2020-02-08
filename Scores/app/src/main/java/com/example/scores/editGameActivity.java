@@ -16,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -100,7 +103,7 @@ public class editGameActivity extends AppCompatActivity {
                         recyclerView.setAdapter(adapter);
                     }
                 });
-        
+        addRealtimeUpdate();
     }
 
     //Functions for each button pushed
@@ -112,7 +115,28 @@ public class editGameActivity extends AppCompatActivity {
     }
     public void exitGame(View item){
         //Create intent
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, DisplayGamesActivity.class);
         startActivity(intent);
+    }
+
+    private void addRealtimeUpdate() {
+        DocumentReference contactListener = db.collection("PhoneBook").document("Contacts");
+        contactListener.addSnapshotListener(new EventListener < DocumentSnapshot > () {
+            @Override
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("ERROR", e.getMessage());
+                    return;
+                }
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    reload();
+                }
+            }
+        });
+    }
+    public void reload(){
+        Intent intent = new Intent(this, editGameActivity.class);
+        intent.putExtra("ID", id);
+        this.startActivity(intent);
     }
 }

@@ -1,8 +1,8 @@
 package com.example.scores;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.content.ClipData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,6 +18,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -38,7 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DisplayGameActivity extends AppCompatActivity {
+public class DisplayGamesActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     //For prints
@@ -67,25 +69,27 @@ public class DisplayGameActivity extends AppCompatActivity {
                             //For every item in the database
                             //Create an item card, set its name and price
                             //Add item card to item list
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, "onComplete: One item");
-                                final Game game = new Game();
-                                game.setName(document.getString("name"));
-                                game.setId(document.getId());
+                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            for (final QueryDocumentSnapshot document : task.getResult()) {
                                 db.collection("games").document(document.getId()).collection("players")
                                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        //If succesfully accessed firebase
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot sub_document : task.getResult()) {
-                                                game.addPlayer(sub_document.getString("name"));
+                                        for (QueryDocumentSnapshot player : task.getResult()) {
+                                            Log.d(TAG, "onComplete: UID" + player.getString("uid"));
+                                            if (player.getString("uid").equals(user.getUid())) {
+                                                Log.d(TAG, "onComplete: HEre");
+                                                final Game game = new Game();
+                                                game.setName(document.getString("name"));
+                                                game.setId(document.getId());
+                                                Games.add(game);
                                             }
-                                            Games.add(game);
-                                            Log.d(TAG, "onComplete: Game added");
                                         }
-                                        //Set the adapter to add all the item cards to the recycler view
-                                        Log.d(TAG, "onComplete: set adapter");
+                                        Log.d(TAG, "onCreate: Got to this point.");
+                                        Log.d(TAG, "onComplete: size" + Games.size());
+                                        for (int i = 0; i < Games.size(); i++) {
+                                            Log.d(TAG, "game name is: " + Games.get(i).getName());
+                                        }
                                         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
                                         recyclerView.setLayoutManager(hold);
                                         adapter = new Game_Adapter(Games);
@@ -100,8 +104,6 @@ public class DisplayGameActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
         //Navigation Bar
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
