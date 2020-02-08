@@ -70,11 +70,13 @@ public class DisplayGamesActivity extends AppCompatActivity {
                             //Create an item card, set its name and price
                             //Add item card to item list
                             final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            //For each game
                             for (final QueryDocumentSnapshot document : task.getResult()) {
                                 db.collection("games").document(document.getId()).collection("players")
                                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        //For each player
                                         for (QueryDocumentSnapshot player : task.getResult()) {
                                             Log.d(TAG, "onComplete: UID" + player.getString("uid"));
                                             if (player.getString("uid").equals(user.getUid())) {
@@ -82,6 +84,11 @@ public class DisplayGamesActivity extends AppCompatActivity {
                                                 final Game game = new Game();
                                                 game.setName(document.getString("name"));
                                                 game.setId(document.getId());
+
+                                                for (QueryDocumentSnapshot sub_document : task.getResult()) {
+                                                    game.addPlayer(sub_document.getString("name"));
+                                                }
+
                                                 Games.add(game);
                                             }
                                         }
