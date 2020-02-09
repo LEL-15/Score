@@ -27,6 +27,7 @@ import java.util.Map;
 public class AddPlayerActivity extends AppCompatActivity {
     final FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     String game_id;
+    String game_type;
     String TAG ="testing";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +38,24 @@ public class AddPlayerActivity extends AppCompatActivity {
         //If there are extras, grab them all
         if (extras != null) {
             game_id = loadIntent.getStringExtra("GAME");
+            game_type = loadIntent.getStringExtra("TYPE");
         }
         setContentView(R.layout.activity_add_player);
     }
     //Functions for each button pushed
     public void startGame(View item){
         //Create intent
-        Intent intent = new Intent(this, editGameActivity.class);
-        intent.putExtra("ID", game_id);
-        startActivity(intent);
+        if(game_type.equals("Table")){
+            Intent intent = new Intent(this, AddRowActivity.class);
+            intent.putExtra("ID", game_id);
+            startActivity(intent);
+        }
+        else{
+            Intent intent = new Intent(this, editGameActivity.class);
+            intent.putExtra("ID", game_id);
+            startActivity(intent);
+        }
+
     }
     public void addAnotherPlayer(View item){
         //Write new player
@@ -68,6 +78,7 @@ public class AddPlayerActivity extends AppCompatActivity {
         //Create intent
         Intent intent = new Intent(this, AddPlayerActivity.class);
         intent.putExtra("GAME", game_id);
+        intent.putExtra("TYPE", game_type);
         startActivity(intent);
     }
     public void addById(View item){
@@ -92,7 +103,8 @@ public class AddPlayerActivity extends AppCompatActivity {
         });
         //Create intent
         Intent intent = new Intent(this, AddPlayerActivity.class);
-        intent.putExtra("GAME", game_id);
+        intent.putExtra("ID", game_id);
+        intent.putExtra("TYPE", game_type);
         startActivity(intent);
     }
 }

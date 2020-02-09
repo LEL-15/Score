@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +44,8 @@ public class NewGameActivity extends AppCompatActivity {
         CollectionReference ref = rootRef.collection("games");
         EditText editText = findViewById(R.id.player_name);
         game_name = editText.getText().toString();
+        Spinner colorSpinner = (Spinner) findViewById(R.id.game_pick);
+        final String gameType = colorSpinner.getSelectedItem().toString();
 
         Map<String, Object> data = new HashMap<>();
         data.put("name", game_name);
@@ -86,6 +89,7 @@ public class NewGameActivity extends AppCompatActivity {
                         //Create intent
                         Intent intent = new Intent(hold, AddPlayerActivity.class);
                         intent.putExtra("GAME", id);
+                        intent.putExtra("TYPE", gameType);
                         startActivity(intent);
                     }
                 });

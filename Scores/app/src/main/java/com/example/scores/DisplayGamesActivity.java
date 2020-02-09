@@ -92,11 +92,6 @@ public class DisplayGamesActivity extends AppCompatActivity {
                                                 Games.add(game);
                                             }
                                         }
-                                        Log.d(TAG, "onCreate: Got to this point.");
-                                        Log.d(TAG, "onComplete: size" + Games.size());
-                                        for (int i = 0; i < Games.size(); i++) {
-                                            Log.d(TAG, "game name is: " + Games.get(i).getName());
-                                        }
                                         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
                                         recyclerView.setLayoutManager(hold);
                                         adapter = new Game_Adapter(Games);

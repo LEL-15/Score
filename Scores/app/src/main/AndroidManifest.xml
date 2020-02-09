@@ -25,6 +25,8 @@
         <activity android:name=".DisplayGamesActivity" />
         <activity android:name=".UserActivity" />
         <activity android:name=".NewUserActivity" />
+        <activity android:name=".AddRowActivity" />
+        <activity android:name=".EditTableGameActivity" />
     </application>
 
 </manifest>

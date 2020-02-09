@@ -43,25 +43,29 @@
 
         <ImageButton
             android:id="@+id/minus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/score"
             app:layout_constraintTop_toTopOf="@+id/plus"
-            app:srcCompat="@android:drawable/btn_minus" />
+            app:srcCompat="@drawable/ic_minus" />
 
         <ImageButton
             android:id="@+id/plus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="16dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/btn_plus" />
+            app:srcCompat="@drawable/ic_plus" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
