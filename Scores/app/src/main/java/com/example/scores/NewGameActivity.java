@@ -31,67 +31,56 @@ public class NewGameActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String id;
     String TAG = "testing";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //When this function is called
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_game);
     }
+
     //Functions for each button pushed
-    public void done(View item){
+    public void done(View item) {
         //Write new player
         final FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-        CollectionReference ref = rootRef.collection("games");
+        final CollectionReference ref = rootRef.collection("games");
         EditText editText = findViewById(R.id.player_name);
         game_name = editText.getText().toString();
         Spinner colorSpinner = (Spinner) findViewById(R.id.game_pick);
         final String gameType = colorSpinner.getSelectedItem().toString();
+        final Context hold = this;
 
         Map<String, Object> data = new HashMap<>();
         data.put("name", game_name);
+        data.put("type", gameType);
 
-        ref.add(data);
-        final Context hold = this;
-        db.collection("games")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        ref.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(final DocumentReference game) {
+                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                DocumentReference userRef = rootRef.collection("users").document(user.getUid());
+                userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        //If succesfully accessed firebase
-                        if (task.isSuccessful()) {
-                            //For every item in the database
-                            //Create an item card, set its name and price
-                            //Add item card to item list
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                if(document.getString("name").equals(game_name)){
-                                    id = document.getId();
-                                }
-                            }
-                        }
-                        //Add logged in player
-                        final CollectionReference players = rootRef.collection("games").document(id).collection("players");
-                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        DocumentReference userRef = rootRef.collection("users").document(user.getUid());
-                        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                String name = documentSnapshot.getString("name");
-                                String color = documentSnapshot.getString("color");
-                                Map<String, Object> data = new HashMap<>();
-                                data.put("score", 0);
-                                data.put("name", name);
-                                data.put("color", color);
-                                data.put("uid", user.getUid());
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String name = documentSnapshot.getString("name");
+                        String color = documentSnapshot.getString("color");
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("score", 0);
+                        data.put("name", name);
+                        data.put("color", color);
+                        data.put("uid", user.getUid());
 
-                                players.add(data);
-                            }
-                        });
+                        DocumentReference player = game.collection("players").document(user.getUid());
+                        player.set(data);
+
                         //Create intent
                         Intent intent = new Intent(hold, AddPlayerActivity.class);
-                        intent.putExtra("GAME", id);
+                        intent.putExtra("GAME", game.getId());
                         intent.putExtra("TYPE", gameType);
                         startActivity(intent);
                     }
                 });
+            }
+        });
     }
 }

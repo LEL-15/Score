@@ -19,14 +19,16 @@
         android:id="@+id/table"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:stretchColumns="1"
+        android:background="@color/colorPrimary"
+        android:padding="2sp"
+        android:stretchColumns="*"
         app:layout_constraintTop_toBottomOf="@+id/game_name">
 
         <TableRow android:id="@+id/players">
 
             <TextView
                 android:id="@+id/blank"
-                android:layout_width="100sp"
+                android:layout_width="wrap_content"
                 android:padding="3dip" />
 
         </TableRow>
@@ -38,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
+        android:background="@color/colorPrimary"
         android:onClick="exitGame"
         android:text="Finish game"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -11,13 +11,10 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Dictionary;
 import java.util.List;
 
 //Adapter to create card for items and add them to recyclerView in buy page
@@ -61,7 +58,7 @@ public class Player_Adapter extends RecyclerView.Adapter<Player_Adapter.ViewHold
                 DocumentReference ref = rootRef.collection("games").document(thing.getGame_id()).collection("players").document(thing.getId());
                 ref.update("score",  FieldValue.increment(1));
 
-                Intent intent = new Intent(view.getContext(), editGameActivity.class);
+                Intent intent = new Intent(view.getContext(), EditGameActivity.class);
                 intent.putExtra("ID", thing.getGame_id());
                 view.getContext().startActivity(intent);
             }

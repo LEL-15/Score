@@ -27,7 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class editGameActivity extends AppCompatActivity {
+public class EditGameActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -75,6 +75,7 @@ public class editGameActivity extends AppCompatActivity {
         //Create intent
         Intent intent = new Intent(this, AddPlayerActivity.class);
         intent.putExtra("GAME", id);
+        intent.putExtra("TYPE", "simple");
         startActivity(intent);
     }
     public void exitGame(View item){

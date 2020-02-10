@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".editGameActivity" />
+        <activity android:name=".EditGameActivity" />
         <activity android:name=".AddPlayerActivity" />
         <activity android:name=".NewGameActivity" />
         <activity android:name=".DisplayGamesActivity" />

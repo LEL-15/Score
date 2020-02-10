@@ -84,6 +84,7 @@ public class DisplayGamesActivity extends AppCompatActivity {
                                                 final Game game = new Game();
                                                 game.setName(document.getString("name"));
                                                 game.setId(document.getId());
+                                                game.setType(document.getString("type"));
 
                                                 for (QueryDocumentSnapshot sub_document : task.getResult()) {
                                                     game.addPlayer(sub_document.getString("name"));

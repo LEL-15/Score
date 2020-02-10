@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,12 +17,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,10 +74,16 @@ public class Game_Adapter extends RecyclerView.Adapter<Game_Adapter.ViewHolder> 
             @Override
             public void onClick(View view)
             {
-                String print = "" + thing.getID();
-                Intent intent = new Intent(view.getContext(), editGameActivity.class);
-                intent.putExtra("ID", thing.getID());
-                view.getContext().startActivity(intent);
+                if(thing.getType().equals("Simple")){
+                    Intent intent = new Intent(view.getContext(), EditGameActivity.class);
+                    intent.putExtra("ID", thing.getID());
+                    view.getContext().startActivity(intent);
+                }
+                else if (thing.getType().equals("Table")){
+                    Intent intent = new Intent(view.getContext(), EditTableGameActivity.class);
+                    intent.putExtra("ID", thing.getID());
+                    view.getContext().startActivity(intent);
+                }
             }
         });
 
@@ -153,7 +154,7 @@ public class Game_Adapter extends RecyclerView.Adapter<Game_Adapter.ViewHolder> 
                         ref.document(player.getId()).update("score", 0);
                     }
                     //Create intent
-                    Intent intent = new Intent(context.getApplicationContext(), editGameActivity.class);
+                    Intent intent = new Intent(context.getApplicationContext(), EditGameActivity.class);
                     intent.putExtra("ID", newID);
                     context.startActivity(intent);
                 }

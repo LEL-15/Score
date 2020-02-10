@@ -134,7 +134,7 @@ public class EditTableGameActivity extends AppCompatActivity {
                         for(int i = 0; i < Players.size(); i++ ){
                             Player player = Players.get(i);
                             TextView playerName = new TextView(context);
-                            playerName.setWidth(300);
+                            //playerName.setWidth(300);
                             String name = player.getName();
                             String color_want = player.getColor();
                             int int_color = context.getResources().getIdentifier(color_want, "color", context.getPackageName());
@@ -175,7 +175,17 @@ public class EditTableGameActivity extends AppCompatActivity {
                             Row row = Rows.get(i);
                             TableRow newRow = new TableRow(context);
                             TextView rowName = new TextView(context);
-                            rowName.setWidth(400);
+
+                            //rowName.setWidth(400);
+                            int int_color = context.getResources().getIdentifier("White", "color", context.getPackageName());
+                            rowName.setBackgroundColor(context.getResources().getColor(int_color));
+                            TableLayout.LayoutParams lp =
+                                    new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
+                                            TableLayout.LayoutParams.WRAP_CONTENT);
+
+                            lp.setMargins(2,2,2, 2);
+                            newRow.setLayoutParams(lp);
+
                             String name = row.getName();
                             rowName.setText(name);
                             newRow.addView(rowName);
