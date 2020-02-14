@@ -24,6 +24,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.core.OrderBy;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -39,6 +40,8 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.google.firebase.firestore.Query.Direction.DESCENDING;
 
 public class DisplayGamesActivity extends AppCompatActivity {
 
@@ -58,7 +61,7 @@ public class DisplayGamesActivity extends AppCompatActivity {
         //Get all items from firebase
         //Display buy activity on screen
         setContentView(R.layout.activity_main);
-        db.collection("games")
+        db.collection("games").orderBy("time", DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

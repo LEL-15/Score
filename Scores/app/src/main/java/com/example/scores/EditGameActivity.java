@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,7 +43,7 @@ public class EditGameActivity extends AppCompatActivity {
         Intent loadIntent = getIntent();
         //Find out what the item's id is
         id = loadIntent.getStringExtra("ID");
-        setContentView(R.layout.edit_game);
+        setContentView(R.layout.activity_edit_game);
         final RecyclerView.LayoutManager hold = new LinearLayoutManager(this);
 
         db.collection("games")

@@ -19,9 +19,8 @@ import java.util.List;
 
 //Adapter to create card for items and add them to recyclerView in buy page
 public class Player_Adapter extends RecyclerView.Adapter<Player_Adapter.ViewHolder> {
-
-    List<Player> PlayerList;
-    Context context;
+    private List<Player> PlayerList;
+    private Context context;
 
     public Player_Adapter(List<Player>PlayerList)
     {
@@ -49,6 +48,8 @@ public class Player_Adapter extends RecyclerView.Adapter<Player_Adapter.ViewHold
         int int_color = context.getResources().getIdentifier(color_want, "color", context.getPackageName());
         holder.cv.setCardBackgroundColor(context.getResources().getColor(int_color));
 
+        holder.plus.setBackgroundColor(context.getResources().getColor(int_color));
+        holder.minus.setBackgroundColor(context.getResources().getColor(int_color));
 
         holder.plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +72,10 @@ public class Player_Adapter extends RecyclerView.Adapter<Player_Adapter.ViewHold
                 FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
                 DocumentReference ref = rootRef.collection("games").document(thing.getGame_id()).collection("players").document(thing.getId());
                 ref.update("score",  FieldValue.increment(-1));
+
+                Intent intent = new Intent(view.getContext(), EditGameActivity.class);
+                intent.putExtra("ID", thing.getGame_id());
+                view.getContext().startActivity(intent);
             }
         });
     }

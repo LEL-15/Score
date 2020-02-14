@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -23,6 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,9 +53,13 @@ public class NewGameActivity extends AppCompatActivity {
         final String gameType = colorSpinner.getSelectedItem().toString();
         final Context hold = this;
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
+        String currentDateandTime = sdf.format(new Date());
+
         Map<String, Object> data = new HashMap<>();
         data.put("name", game_name);
         data.put("type", gameType);
+        data.put("time", currentDateandTime);
 
         ref.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
@@ -64,6 +71,7 @@ public class NewGameActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         String name = documentSnapshot.getString("name");
                         String color = documentSnapshot.getString("color");
+
                         Map<String, Object> data = new HashMap<>();
                         data.put("score", 0);
                         data.put("name", name);
