@@ -51,7 +51,6 @@ public class Game_Adapter extends RecyclerView.Adapter<Game_Adapter.ViewHolder> 
     //When this adapter is bound to a view, set the holder title and price
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Game thing = GameList.get(position);
-        Log.d(TAG, "onBindViewHolder: Went into adapter");
 
         holder.title.setText(thing.getName());
         String players_string = "Players:";

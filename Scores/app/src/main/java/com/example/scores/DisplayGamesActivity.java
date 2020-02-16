@@ -20,26 +20,18 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.core.OrderBy;
-
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.google.firebase.firestore.Query.Direction.DESCENDING;
 
@@ -55,6 +47,8 @@ public class DisplayGamesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "Display Activity");
+
         super.onCreate(savedInstanceState);
         //Hold this context
         final RecyclerView.LayoutManager hold = new LinearLayoutManager(this);
@@ -68,7 +62,6 @@ public class DisplayGamesActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         //If succesfully accessed firebase
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: Here");
                             //For every item in the database
                             //Create an item card, set its name and price
                             //Add item card to item list
@@ -81,9 +74,7 @@ public class DisplayGamesActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         //For each player
                                         for (QueryDocumentSnapshot player : task.getResult()) {
-                                            Log.d(TAG, "onComplete: UID" + player.getString("uid"));
                                             if (player.getString("uid").equals(user.getUid())) {
-                                                Log.d(TAG, "onComplete: HEre");
                                                 final Game game = new Game();
                                                 game.setName(document.getString("name"));
                                                 game.setId(document.getId());
@@ -92,12 +83,12 @@ public class DisplayGamesActivity extends AppCompatActivity {
                                                 for (QueryDocumentSnapshot sub_document : task.getResult()) {
                                                     game.addPlayer(sub_document.getString("name"));
                                                 }
-
                                                 Games.add(game);
                                             }
                                         }
                                         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
                                         recyclerView.setLayoutManager(hold);
+                                        Log.d(TAG, "onComplete: setting adapter in display");
                                         adapter = new Game_Adapter(Games);
                                         recyclerView.setAdapter(adapter);
                                     }
@@ -118,12 +109,13 @@ public class DisplayGamesActivity extends AppCompatActivity {
                 addGame(fab);
             }
         });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery)
+                R.id.nav_home, R.id.nav_user)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

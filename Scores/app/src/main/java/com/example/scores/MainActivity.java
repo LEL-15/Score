@@ -205,13 +205,5 @@ public class MainActivity extends AppCompatActivity {
             signIn();
             Log.d(TAG, "onClick: Signing in");
         }
-        else if(i == R.id.nav_gallery){
-            Intent intent = new Intent(this, UserActivity.class);
-            startActivity(intent);
-        }
-        else if(i == R.id.nav_home){
-            Intent intent = new Intent(this, DisplayGamesActivity.class);
-            startActivity(intent);
-        }
     }
 }
